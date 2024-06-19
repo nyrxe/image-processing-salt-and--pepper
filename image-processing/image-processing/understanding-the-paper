@@ -1,0 +1,209 @@
+* ABSTRACT
+
+The filter uses a variable window size. After identifying
+distorted pixels, if there is at least one or more undistorted pixels are encountered
+in the processing window, the updated value of the distorted pixel is calculated by
+the weighted mean of undistorted pixels when a window size is 3×3 and replaced
+by the mean value of the undistorted pixels with the highest frequency
+distribution when a window size is larger. This filter is applied twice in order to
+sufficiently remove high noise levels. The comparison results with other
+denoising filters indicate that the developed filter has superior or comparable
+denoising capability in terms of visual appearance and objective measures.
+
+* INTRODUCTION
+
+Using Median filters for filtering Salt&Pepper noise is a common practice
+
+Several modifications have been suggested to improve the performance of the MF.
+A switching operator is used with the median filter to preserve undistorted pixels in images [3]. 
+The idea of switching operator is to detect impulse noise according to a specific condition in order to decide
+which pixels should be modified. 
+Wang and Zhang [4] applied median filtering with a switching operator progressively over several iterations. 
+This filter is denoted as PSMF. 
+
+Srinivasan and Ebenezer [5] developed a two-stage decision-based algorithm (DBA). First, the pixels with salt-
+and-pepper noise are marked. Then, these distorted pixels are updated by a median value within a window of size 3×3. 
+This algorithm yields artefacts when noise levels are very high. To mitigate
+this drawback, 
+
+Esakkirajan et al. [6] introduced a modified decision-based unsymmetric trimmed
+median filter (MDBUTMF). In this filter, the noisy pixels are replaced by either a trimmed
+median value of noise-free pixels or by mean value when all pixels in the processing window are
+noisy. The main weakness of this filter is that it does not give satisfactory results when all pixels
+inside the window are noisy. 
+
+Zhang et al. [7] designed a new impulse noise detection using evidential reasoning and a new adaptive MF
+
+
+The denoising capability of the MF is also improved by adapting the processing window size in
+accordance with the noise level.
+
+Hwang and Haddad [8] developed an adaptive median filter
+(AMF) in which the processing window size is modified with regards to noise levels. The results
+of this filter indicate that a window size of 5×5 gave a good result when a noise level was 30%
+and a window size of 11×11 gave a satisfactory result when a noise level was 70%. Although this
+filter works adequately for low and medium noise levels, it cannot cope with high noise levels.
+
+The center-weighted median filter (CWM) filter [9] and its modified version [10] are also
+developed. The CWM filter introduced weights to each median filter component such that the
+central weight is greater than other weights. In [10], the difference between the CWM filter
+output and the central pixel is used in the detection of noise. Based on a simple threshold
+operator, the final filter output is selected as either the median value or the central pixel.
+
+Kalyoncu et al. [11] proposed an interpolation-based impulse noise removal technique in which a
+weighted mean value is calculated as a final filter output for each noisy pixel. The weights are
+computed according to the distance between the surrounding pixels and the primary pixel in
+adaptive window size.
+
+Zhang and Li [12] introduced an adaptive weighted mean filter (AWMF)
+where the adaptive window is used in order to detect distorted pixels. After that, the distorted
+pixels are restored using the weighted mean value.
+
+Kandemir et al. [13] eliminated the spatial
+tendency to the center of undistorted pixels via first detecting distorted pixels, then recalibrating
+the weights for the undistorted pixels and finally replacing the distorted pixels with the weighted
+mean value. Erkan et al. 
+
+[14] adopted a new filter (DAMF) for restoring salt-and-pepper noise.
+First, the distorted image is padded symmetrically. Three window sizes are used and the proper
+size is chosen depending on local image content. Then, the distorted pixels are modified using the
+median value of undistorted pixels.
+
+Many filters have been developed using fuzzy set theory [15,16,17,18,19]. Eng and Ma [15]
+incorporated a novel switching mechanism with a weighted median filter using fuzzy set theory to
+deal with the weakness of the traditional switching-based median filters. This mechanism has
+been tested on noise levels, ranging from 10% to 70%. Toh and Isa [16] combined a switching
+median filter and fuzzy reasoning into a hybrid filtering scheme, which is denoted as NAFSM. In
+this scheme, the histogram is employed to identify distorted pixels. Ahmed and Das [17]
+developed an iterative adaptive fuzzy filter. First, a new detector using a fuzzy set scheme is
+designed to detect distorted pixels. Then, the detected pixels are modified via a weighted mean
+filter. Wang et al. [18] developed a fuzzy switching based weighted mean filter for recovering
+pixels distorted by impulse noise. In this filter, the distorted pixels are detected using the
+maximum value of an absolute luminance difference in a processing window. In [19], the
+distorted pixels are determined by tuning two Gaussian membership functions. The final filter
+output is calculated using weighted mean filtering based on a fuzzy approach.
+
+The evaluation results from different filers in the literature demonstrate that:
+ (1) mean filtering outperforms median filtering for restoring salt-and-pepper noise, 
+ (2) an adaptive (dynamic) window size gives a superior performance over a fixed window
+     size particularly when noise levels are high, 
+ (3) modifying only distorted pixels can better preserve image details. Therefore, this 
+     work proposes a new filter for dealing with salt-and-pepper noise in which the distorted
+     pixels are firstly determined, and then a denoising operation is performed on these pixels.
+     For each distorted pixel, the filter output is calculated as the weighted mean of 
+     undistorted pixels when the window size is 3×3 and calculated as the mean value of 
+     undistorted pixels which have the highest frequencies in accordance to their histogram 
+     distribution when the window size is larger.
+
+
+* THE PROPOSED FILTER DESCRIPTION
+
+The proposed filter only restores the distorted pixels using their neighboring undistorted pixels.
+The values of undistorted pixels are kept without alteration.
+The binary mask S is created to detect the position of distorted pixels in the matrix B.
+
+ In the filtering process, the window size is varied in order to deal with different noise levels.
+ For each identified noisy pixel, the size of the window is adapted in accordance to the noise level.
+ If none of undistorted pixels is encountered in the processing window, the size of this window is continuously enlarged.
+ If at least one or more undistorted pixels is detected, the weight(v) is calculated for each one.
+(according to the Manhattan distance of the undistorted pixel to the center of the window.)
+
+  After that, the weighted mean value of undistorted pixels is calculated as the filter output when the window size is 3×3.
+  For larger window size, the undistorted pixels with the highest frequency are extracted and the mean value of these pixels is used as the new output.
+
+"""
+  The frequencies of the pixels can give an indication of the main intensity value that is dominated in the window.
+  The mean value of the highest frequency pixels could better preserve image details than the mean values of all undistorted pixels when the window size is greater than 3×3
+"""
+
+  Finally, if the largest window size is reached to a predetermined maximum value and none of the local pixels is noise-free, the pixel with the highest frequency in the window is selected as the new output value.
+  This filter is applied twice in order to deal with high noise levels
+
+"""
+  weighted mean value gives better results when the window size is set at 3×3. While the mean value of only the highest frequency pixels give superior results when the window size is greater than 3×3
+"""  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
